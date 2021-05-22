@@ -1,9 +1,9 @@
 """
 A rabbit wants to jump from one side of the road to the other. The rabbit starts at position A and wants to get to B.
-For simplicity the rabbit can only jump a fixed distance D. Write an efficient functionint jumps(int A, int B, int D)
+For simplicity the rabbit can only jump a fixed distance D. Write an efficient function int jumps(int A, int B, int D)
 that returns the minimal number of jumps required to get from A to B (or further in case the last jump makes the rabbit
-jump over B).For example: givenA=10, B=85, D=30, the function should return 3. The first jump takes the rabbit to 10+30=40.
-The second jump to 40+30=70. The third jump to 70+30=100
+jump over B).For example: givenA=10, B=85, D=30, the function should return 3. The first jump takes the rabbit to
+10+30=40. The second jump to 40+30=70. The third jump to 70+30=100
 """
 import logging
 
@@ -22,14 +22,14 @@ def jumps(a: int = 10, b: int = 85, d: int = 30) -> tuple[int, int]:
             Total jumps
 
     """
-    jumps, total_dist = 0, 0
+    rabbit_jumps, total_dist = 0, 0
     while total_dist < b:
         if total_dist == 0:
             total_dist += a
         total_dist += d
-        jumps += 1
+        rabbit_jumps += 1
 
-    return jumps, total_dist
+    return rabbit_jumps, total_dist
 
 
 if __name__ == '__main__':
