@@ -23,7 +23,7 @@ if __name__ == '__main__':
     hadoop = sqlContext.read.options(header=True).csv('../resources/hadoop.csv')
     mysql = sqlContext.read.options(header=True, delimiter='	').csv('../resources/mysql.csv')
     hadoop.show(5)
-    mysql.show(5)
+    mysql.printSchema()
     logger.info(f'Total number of rows in hadoop csv = {hadoop.count()}')
     logger.info(f'Total number of rows in hadoop csv = {mysql.count()}')
 
