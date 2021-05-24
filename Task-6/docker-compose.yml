@@ -1,0 +1,36 @@
+version: "3.1"
+services:
+    api:
+        build: .
+        container_name: api
+        volumes:
+            - ./:/workspace/Task_6
+        ports:
+            - "8080:8080"
+        depends_on:
+            db:
+                condition: service_healthy
+        links:
+            - db
+        networks:
+            - default
+    db:
+        container_name: db
+        image: mysql
+        security_opt:
+            - seccomp:unconfined
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+            MYSQL_USER: "user"
+            MYSQL_PASSWORD: "password"
+            MYSQL_DATABASE: "database"
+        volumes:
+             - ./mysql_db:/var/lib/mysql
+        healthcheck:
+            test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+            timeout: 20s
+            retries: 8
+        networks:
+            - default
