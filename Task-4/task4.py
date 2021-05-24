@@ -16,32 +16,25 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s %(levelname)-8s %(message)s',
                         datefmt='%Y-%m-%d %H:%M:%S')
+
     conf = SparkConf().setAppName("Comparing_log_files").setMaster('local')
     sc = SparkContext(conf=conf)
     sqlContext = sql.SQLContext(sc)
 
     hadoop = sqlContext.read.options(header=True).csv('../resources/hadoop.csv')
     mysql = sqlContext.read.options(header=True, delimiter='	').csv('../resources/mysql.csv')
-    hadoop.show(5)
-    mysql.printSchema()
     logger.info(f'Total number of rows in hadoop csv = {hadoop.count()}')
     logger.info(f'Total number of rows in hadoop csv = {mysql.count()}')
 
-    # Searching for a good metric to find missing records
-    logger.info('Hadoop & Mysql log Type count...')
-    mysql.groupBy('logtype').count().show()
-    hadoop.groupBy('type').count().show()
     logger.info('Hadoop & Mysql Content Type count...')
     mysql.groupBy('wp_type').count().show()
     hadoop.groupBy('content_type').count().show()
-    logger.info('Hadoop & Mysql browser count...')
-    mysql.groupBy('browser').count().show()
-    hadoop.groupBy('berowser').count().show()
-    logger.info('Hadoop & Mysql screen_res count...')
-    mysql.groupBy('screen_res').count().show()
-    hadoop.groupBy('screen_resolution').count().show()
 
-    # Decided to go with browser
+    logger.info('Arranging Hadoop & Mysql screen_res where content type is Javascript...')
+    hadoop.filter(hadoop['content_type'] == 'JAVASCRIPT').groupBy('berowser', 'screen_resolution').count().show()
+    mysql.filter(mysql['wp_type'] == 2).groupBy('browser', 'screen_res').count().show()
+
+    # Reducing size of dataframe using above analysis
     mysql_ids = mysql.filter((mysql.browser == 6)
                              | (mysql.browser == 12)
                              | (mysql.browser == 0)
@@ -53,8 +46,10 @@ if __name__ == '__main__':
                                | (hadoop.berowser == 0)
                                | (hadoop.berowser == 8)).select('id')
     user_id = mysql_ids.subtract(hadoop_ids)
-    user_id.show()
-    logger.info(f'Found {mysql_ids.subtract(hadoop_ids).count()} missing records with mentioned IDs')
+    logger.info(f'Found {mysql_ids.subtract(hadoop_ids).count()} missing records')
+    missing_records = mysql.join(user_id, mysql['id'] == user_id['id'], how='inner')
+    missing_records.show()
 
-    mysql.join(user_id, mysql['id'] == user_id['id'], how='inner').show()
-    hadoop.join(user_id, hadoop['id'] == user_id['id'], how='inner').show()
+    missing_records_including_mysql = mysql.join(user_id, mysql['id'] == user_id['id'], how='left')
+    missing_records.groupBy('browser', 'screen_res').count().show()
+    missing_records_including_mysql.groupBy('browser', 'screen_res').count().show()
