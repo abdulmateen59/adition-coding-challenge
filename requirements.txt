@@ -1,3 +1,7 @@
 pycodestyle~=2.7.0
 pytest~=6.2.4
 pyspark~=3.1.1
+mysql-connector-python~=8.0.25
+flask~=1.1.2
+Flask-RESTful~=0.3.9
+tqdm~=4.59.0
