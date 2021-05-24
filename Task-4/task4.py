@@ -5,6 +5,7 @@ MySQL). The logs differ in format so they cannot be compared directly.
 - Find a pattern that will make it easier for us to identify the source of the problem.
 """
 import logging
+import os
 
 from pyspark import SparkConf
 from pyspark import SparkContext
@@ -21,8 +22,8 @@ if __name__ == '__main__':
     sc = SparkContext(conf=conf)
     sqlContext = sql.SQLContext(sc)
 
-    hadoop = sqlContext.read.options(header=True).csv('../resources/hadoop.csv')
-    mysql = sqlContext.read.options(header=True, delimiter='	').csv('../resources/mysql.csv')
+    hadoop = sqlContext.read.options(header=True).csv(f'{os.getcwd()}/../resources/hadoop.csv')
+    mysql = sqlContext.read.options(header=True, delimiter='	').csv(f'{os.getcwd()}/../resources/mysql.csv')
     logger.info(f'Total number of rows in hadoop csv = {hadoop.count()}')
     logger.info(f'Total number of rows in hadoop csv = {mysql.count()}')
 
