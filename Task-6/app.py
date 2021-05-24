@@ -14,6 +14,15 @@ app = Flask(__name__)
 api = Api(app)
 
 
+@app.route('/')
+def index():
+    """
+    Homepage
+    :return: Server is up!
+    """
+    return 'Server is up!', 200
+
+
 def get_db():
     """
     Connect to Mysql
@@ -43,9 +52,8 @@ class UserAggregate(Resource):
         """
         cursor = self.db.cursor()
         cursor.execute(f'select count(*) from `adition` where userid={userid};')
-        result = {'Number of Ads': cursor.fetchone()}
-        result = jsonify(result)
-        return result
+        result = {'seen_ads': cursor.fetchone()[0]}
+        return jsonify(result)
 
     def post(self):
         """
@@ -66,7 +74,7 @@ class UserAggregate(Resource):
         pass
 
 
-api.add_resource(UserAggregate, '/userid/<int:userid>')
+api.add_resource(UserAggregate, '/ads/user/<int:userid>')
 if __name__ == "__main__":
     logger = logging.getLogger(__name__)
     logging.basicConfig(level=logging.INFO,
