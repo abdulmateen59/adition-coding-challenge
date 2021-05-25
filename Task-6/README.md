@@ -49,7 +49,7 @@ advertisement data
 **Curl**
 
 ```sh
-$ curl -X GET http://localhost:8080/ads/user/6096033656594890947 -H 'cache-control: no-cache'
+$ curl http://localhost:8080/ads/user/6096033656594890947
 ```
 
 
