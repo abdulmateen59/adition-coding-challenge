@@ -14,10 +14,13 @@ def zeros_sequence(n: int = 168000) -> int:
     :param n:
             Integer of binary
     :return:
-            len of max sequence between consecutive 1's
+            len of max sequence between consecutive 1's,
+            -1 in case nothing is found
     """
-
-    return len(max(re.findall(r'1(?=(0+)1)', bin(n))))
+    result = re.findall(r'1(?=(0+)1)', bin(n))
+    if not result:
+        return -1
+    return len(max(result))
 
 
 if __name__ == '__main__':
@@ -26,5 +29,3 @@ if __name__ == '__main__':
                         format='%(asctime)s %(levelname)-8s %(message)s',
                         datefmt='%Y-%m-%d %H:%M:%S')
     logger.info(f'Number of zeros = {zeros_sequence()}')
-    logger.info(f'Number of zeros = {zeros_sequence(n=9)}')
-    logger.info(f'Number of zeros = {zeros_sequence(n=16901)}')

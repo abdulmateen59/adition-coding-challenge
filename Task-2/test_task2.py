@@ -12,5 +12,3 @@ def test_jumps():
     assert jumps(2, 1, 1) == (1, 1)
     assert jumps(10, 85, 30) == (3, 100)
     assert jumps(0, 0, 10) == (0, 0)
-
-
