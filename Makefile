@@ -1,4 +1,4 @@
-docker-task-1-4:
+run-task-1-4:
 	docker pull jupyter/pyspark-notebook
 
 	docker run --user root -d --name python-spark -e CHOWN_HOME=yes -e CHOWN_HOME_OPTS='-R' -v `pwd`:/home/workspace jupyter/pyspark-notebook
