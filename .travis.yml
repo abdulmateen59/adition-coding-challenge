@@ -1,0 +1,15 @@
+language: minimal
+
+services:
+    - docker
+
+before_install:
+    - docker pull jupyter/pyspark-notebook
+    - docker run --user root -d --name python-spark -e CHOWN_HOME=yes -e CHOWN_HOME_OPTS='-R' -v `pwd`:/home/workspace jupyter/pyspark-notebook
+
+script:
+    - docker exec python-spark bash -c "cd /home/workspace && pip install -r requirements.txt"
+    - docker exec python-spark bash -c "cd /home/workspace/Task-1 && pytest . && python task1.py"
+    - docker exec python-spark bash -c "cd /home/workspace/Task-2 && pytest . && python task2.py"
+    - docker exec python-spark bash -c "cd /home/workspace/Task-3 && pytest . && python task3.py"
+    - docker exec python-spark bash -c "cd /home/workspace/Task-4/ && python task4.py"
