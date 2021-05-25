@@ -25,7 +25,8 @@ if __name__ == '__main__':
     hadoop = sqlContext.read.options(header=True).csv(f'{os.getcwd()}/../resources/hadoop.csv')
     mysql = sqlContext.read.options(header=True, delimiter='	').csv(f'{os.getcwd()}/../resources/mysql.csv')
     logger.info(f'Total number of rows in hadoop csv = {hadoop.count()}')
-    logger.info(f'Total number of rows in hadoop csv = {mysql.count()}')
+    logger.info(f'Total number of rows in mysql csv = {mysql.count()}')
+    logger.info(f'Difference of records = {mysql.count() - hadoop.count()}')
 
     logger.info('Hadoop & Mysql Content Type count...')
     mysql.groupBy('wp_type').count().show()
@@ -35,7 +36,11 @@ if __name__ == '__main__':
     hadoop.filter(hadoop['content_type'] == 'JAVASCRIPT').groupBy('berowser', 'screen_resolution').count().show()
     mysql.filter(mysql['wp_type'] == 2).groupBy('browser', 'screen_res').count().show()
 
-    # Reducing size of dataframe using above analysis
+    '''
+    Reducing the size of the data frame using the above analysis for a quick result,
+    although removing the filter() would not change anything except for a slightly
+    longer calculation time.
+    '''
     mysql_ids = mysql.filter((mysql.browser == 6)
                              | (mysql.browser == 12)
                              | (mysql.browser == 0)
@@ -49,8 +54,15 @@ if __name__ == '__main__':
     user_id = mysql_ids.subtract(hadoop_ids)
     logger.info(f'Found {mysql_ids.subtract(hadoop_ids).count()} missing records')
     missing_records = mysql.join(user_id, mysql['id'] == user_id['id'], how='inner')
+    # Verifying no such record exists in hadoop
+    hadoop.join(missing_records, (hadoop['berowser'] == missing_records['browser'])
+                & (hadoop['operating_system'] == missing_records['os'])
+                & (hadoop['content_type'] == missing_records['wp_type'])
+                & (hadoop['screen_resolution'] == missing_records['screen_res']), how='inner').show()
+    # Missing records
     missing_records.show()
-
-    missing_records_including_mysql = mysql.join(user_id, mysql['id'] == user_id['id'], how='left')
+    # Following browser and screen records are missing
     missing_records.groupBy('browser', 'screen_res').count().show()
-    missing_records_including_mysql.groupBy('browser', 'screen_res').count().show()
+
+    # Additional record exists in hadoop
+    # hadoop.select('id').subtract(mysql.select('id')).show()
