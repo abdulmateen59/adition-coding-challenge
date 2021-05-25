@@ -7,11 +7,10 @@ docker-task-1-4:
 	echo "\033[0;35m ***************** Task 01 *****************"
 	docker exec python-spark bash -c "cd /home/workspace/Task-1 && pytest . && python task1.py"
 	echo "\033[0;34m ***************** Task 02 *****************"
-	docker exec python-spark bash -c "cd /home/workspace/Task-2 && python task2.py"
+	docker exec python-spark bash -c "cd /home/workspace/Task-2 && pytest . && python task2.py"
 	echo "\033[0;33m ***************** Task 03 *****************"
-	docker exec python-spark bash -c "cd /home/workspace/Task-3 && python task3.py"
+	docker exec python-spark bash -c "cd /home/workspace/Task-3 && pytest . && python task3.py"
 	echo "\033[0;32m ***************** Task 04 *****************"
 	docker exec python-spark bash -c "cd /home/workspace/Task-4/ && python task4.py"
 
 	docker rm -f python-spark
-

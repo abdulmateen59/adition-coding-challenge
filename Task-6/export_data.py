@@ -39,7 +39,7 @@ if __name__ == '__main__':
         with open(f'{os.getcwd()}/resources/mysql.csv') as csv_file:
             reader = csv.DictReader(csv_file, delimiter='	')
             fieldnames = reader.fieldnames
-            for row in tqdm(reader, desc='Please wait feeding data to mysql db...', total=32978):
+            for row in tqdm(reader, desc='Please wait, exporting data...', total=32993):
                 row['time'] = f"'{row['time']}'"
                 if not row['svz_id'].isnumeric() and not row['svz_id'].isdigit():
                     row['svz_id'] = '000'
