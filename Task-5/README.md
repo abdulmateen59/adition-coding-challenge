@@ -4,6 +4,28 @@ Set up a single node Kafka cluster and feed it with the MySQL data from task 4. 
 should be a single message. Write a consumer which prints the messages you have just fed into 
 Kafka to stdout.
 
+## Make
+  - Use following command to start zookeeper and kafka:
+    ```sh
+    $ make run-kafka
+    ```
+  - Create topic, default `mysql` topic name will be used:
+    ```sh
+    $ make create-topic
+    ```
+  - Start producer:
+    ```sh
+    $ make start-producer
+    ```
+  - Open new terminal , and start consumer:
+    ```sh
+    $ make start-consumer
+    ```
+  - To stop the containers use:
+    ```sh
+    $ make stop-kafka
+    ```
+---
 ## Built With
 - Docker compose 
     - zookeeper:3.4.9
