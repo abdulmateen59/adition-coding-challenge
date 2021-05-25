@@ -22,10 +22,12 @@ def jumps(a: int = 10, b: int = 85, d: int = 30) -> tuple[int, int]:
             Total jumps
 
     """
-    rabbit_jumps, total_dist = 0, 0
+    if d <= 0:
+        return 0, 0
+    if a > b:
+        a = b-1
+    rabbit_jumps, total_dist = 0, a
     while total_dist < b:
-        if total_dist == 0:
-            total_dist += a
         total_dist += d
         rabbit_jumps += 1
 
@@ -37,5 +39,4 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s %(levelname)-8s %(message)s',
                         datefmt='%Y-%m-%d %H:%M:%S')
-
     logger.info(f'Number of jumps: {jumps()[0]}, distance covered {jumps()[1]}')
