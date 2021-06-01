@@ -12,6 +12,7 @@ def jumps(a: int = 10, b: int = 85, d: int = 30) -> tuple[int, int]:
     """
     Calculates the number of jumps required to reach point b
     from point a using the distance d.
+    Another solution: round((b-a)/d)
     :param a:
             Initial point
     :param b:
